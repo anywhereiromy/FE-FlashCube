@@ -182,14 +182,14 @@ class Cube extends React.Component {
                         geometry={{primitive: 'plane', width: 5.8, height: 0.5}}
                         material={{src: '#cardboard'}}
                         position={{x: 0, y: 2.65, z: 2.02}}
-                        text={{value: this.props.topic.title, height: 0.2, align: 'center', color: 'black', baseline: 'bottom', wrapCount: '40', font: 'https://cdn.aframe.io/fonts/mozillavr.fnt'}}
+                        text={{value: this.props.topic.title, height: 0.2, align: 'center', color: 'black', baseline: 'bottom', wrapCount: '40', font: 'https://cdn.aframe.io/fonts/Exo2Bold.fnt'}}
                         >
                     </Entity>
                     <Entity
                         geometry={{primitive: 'plane', width: 5.8, height: 0.5}}
                         material={{src: '#cardboard'}}
                         position={{x: 0, y: -2.65, z: 2.02}}
-                        text={{value: 'Revision', align: 'center', color: 'black', baseline: 'bottom', wrapCount: '40', font: 'https://cdn.aframe.io/fonts/mozillavr.fnt'}}                        
+                        text={{value: 'Revision', align: 'center', color: 'black', baseline: 'bottom', wrapCount: '40', font: 'https://cdn.aframe.io/fonts/Exo2Bold.fnt'}}                        
                         >
                     </Entity>
                     {posArr.map((pos, index) => {
@@ -213,14 +213,14 @@ class Cube extends React.Component {
                         geometry={{primitive: 'plane', width: 5.8, height: 0.5}}
                         material={{src: '#cardboard'}}
                         position={{x: 0, y: 2.65, z: 2.02}}
-                        text={{value: this.props.topic.title, height: 0.2, align: 'center', color: 'black', baseline: 'bottom', wrapCount: '40', font: 'https://cdn.aframe.io/fonts/mozillavr.fnt'}}
+                        text={{value: this.props.topic.title, height: 0.2, align: 'center', color: 'black', baseline: 'bottom', wrapCount: '40', font: 'https://cdn.aframe.io/fonts/Exo2Bold.fnt'}}
                         >
                     </Entity>
                     <Entity
                         geometry={{primitive: 'plane', width: 5.8, height: 0.5}}
                         material={{src: '#cardboard'}}
                         position={{x: 0, y: -2.65, z: 2.02}}
-                        text={{value: `Quiz - ${this.state.correctAnswers} / ${this.state.questionsAsked} Correct Answers`, align: 'center', color: 'black', baseline: 'bottom', wrapCount: '40', font: 'https://cdn.aframe.io/fonts/mozillavr.fnt'}}                        
+                        text={{value: `Quiz - ${this.state.correctAnswers} / ${this.state.questionsAsked} Correct Answers`, align: 'center', color: 'black', baseline: 'bottom', wrapCount: '40', font: 'https://cdn.aframe.io/fonts/Exo2Bold.fnt'}}                        
                         >
                     </Entity>
                     {posArr.slice(5).map((pos, index) => {
