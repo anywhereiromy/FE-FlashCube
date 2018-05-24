@@ -3,7 +3,7 @@ import React from 'react';
 function Loading () {
     return (
         <div className="Loading">
-            <img src="rawbeef.jpg"/>
+            <img alt="" src="rawbeef.jpg"/>
         </div>
     );
 }

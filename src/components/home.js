@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { fire } from '../config/Fire'
-import '../home.css'
-import Loading from './loading'
-import Title from './title';
-import MainButton from './main-button'
-import { Link } from 'react-router-dom';
-import * as API from './API';
+import { fire } from '../config/Fire';
+import '../home.css';
+import Loading from './loading';
+// import Title from './title';
+// import MainButton from './main-button';
+// import { Link } from 'react-router-dom';
+// import * as API from './API';
 import logoText from '../images/flash-text.png';
 import TopicCard from './topic-card';
 
@@ -49,13 +49,13 @@ class Home extends Component {
                         </div>
                         <div className="profile-pic">
                         
-                            <img src={this.props.user.photoURL} />
+                            <img alt="" src={this.props.user.photoURL} />
                         </div>
                         <button onClick={this.logout}>Logout</button> */}
 
-                        <img className="logo-image" src={logoText} />
+                        <img alt="" className="logo-image" src={logoText} />
                         <div className="profile-pic">
-                            <img src={this.props.user.photoURL} />
+                            <img alt="" src={this.props.user.photoURL} />
                         </div>
                         <p>Welcome {this.props.user.displayName || "User"}</p>
 

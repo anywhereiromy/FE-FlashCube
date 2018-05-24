@@ -25,11 +25,11 @@ class Cube extends React.Component {
     }
 
     componentWillUnmount () {
-        document.removeEventListener('keydown', this.pressSpace)
+        document.removeEventListener('keydown', this.pressSpace);
     }
 
     updateCurrentCard = e => {
-        this.setState({currentCard: e})
+        this.setState({currentCard: e});
     }
 
     exitCube = () => {
@@ -38,52 +38,53 @@ class Cube extends React.Component {
     }
 
     refreshCards = () => {
-        console.log('refreshing cards')
-        this.setState({iteration: this.state.iteration + 1})
+        console.log('refreshing cards');
+        this.setState({iteration: this.state.iteration + 1});
         document.querySelectorAll('.flashCard').forEach(e => {
-            if (!e.getAttribute('text')) e.setAttribute('rotation', {x: 0, y: 0, z: 0})
-            if (!e.getAttribute('text')) e.emit('spin')
-        })
-        console.log('refreshing cards')        
+            if (!e.getAttribute('text')) e.setAttribute('rotation', {x: 0, y: 0, z: 0});
+            if (!e.getAttribute('text')) e.emit('spin');
+        });
+        console.log('refreshing cards');      
     }
 
     nextQuestion = (correct) => {
-        let quizQuestions = this.state.quizQuestions
-        quizQuestions.splice(this.state.currentQuestion, 1)
-        const currentQuestion = Math.floor(Math.random() * quizQuestions.length)
-        const correctAnswers = correct ? this.state.correctAnswers + 1 : this.state.correctAnswers
-        this.setState({quizQuestions, currentQuestion, correctAnswers, questionsAsked: this.state.questionsAsked + 1, rand: Math.random()})
+        let quizQuestions = this.state.quizQuestions;
+        quizQuestions.splice(this.state.currentQuestion, 1);
+        const currentQuestion = Math.floor(Math.random() * quizQuestions.length);
+        const correctAnswers = correct ? this.state.correctAnswers + 1 : this.state.correctAnswers;
+        this.setState({quizQuestions, currentQuestion, correctAnswers, questionsAsked: this.state.questionsAsked + 1, rand: Math.random()});
     }
 
     pressSpace = e => {
-        console.log(e.keyCode)
+        console.log(e.keyCode);
         if (e.keyCode === 32) {
-            console.log(this.state.currentCard.className)
-            console.log(this.state.currentCard.id)
-            console.log(this.state.currentCard.getAttribute('rotation'))
+            console.log(this.state.currentCard.className);
+            console.log(this.state.currentCard.id);
+            console.log(this.state.currentCard.getAttribute('rotation'));
             if (this.state.currentCard.className === 'refreshCard') {
-                this.state.currentCard.emit('spin')
+                this.state.currentCard.emit('spin');
                 this.refreshCards();
             } else if (this.state.currentCard.className === 'flashCard') {
-                this.state.currentCard.getAttribute('rotation').y % 360 === 0 ? this.state.currentCard.emit('flipOver') : this.state.currentCard.emit('flipBack')
+                this.state.currentCard.getAttribute('rotation').y % 360 === 0 ? this.state.currentCard.emit('flipOver') : this.state.currentCard.emit('flipBack');
             } else if (this.state.currentCard.className === 'exitCard') {
-                this.state.currentCard.getAttribute('rotation').y % 360 === 0 ? this.state.currentCard.emit('flipOver') : this.state.currentCard.emit('flipBack')                
+                this.state.currentCard.getAttribute('rotation').y % 360 === 0 ? this.state.currentCard.emit('flipOver') : this.state.currentCard.emit('flipBack');       
             } else if (this.state.currentCard.className === 'exitConfirm') {
                 this.exitCube();
             } else if (this.state.currentCard.className === 'answerCard') {
-                const correct = this.state.currentCard.id === 'correctAnswer'
+                const correct = this.state.currentCard.id === 'correctAnswer';
                 document.querySelectorAll('.answerCard').forEach(e => {
                     if (!e.getAttribute('text')) {
-                        e.getAttribute('rotation').y % 360 === 0 ? e.emit('flipOver') : e.emit('flipBack')
+                        e.getAttribute('rotation').y % 360 === 0 ? e.emit('flipOver') : e.emit('flipBack');
                     }
                 })
                 setTimeout(() => {
                     document.querySelectorAll('.answerCard').forEach(e => {
                         if (!e.getAttribute('text')) {
-                            e.getAttribute('rotation').y % 360 === 0 ? e.emit('flipOver') : e.emit('flipBack')
+                            e.getAttribute('rotation').y % 360 === 0 ? e.emit('flipOver') : e.emit('flipBack');
                         }
                     })
-                    setTimeout(() => {this.nextQuestion(correct)}, 1000)
+                    setTimeout(() => {
+                        this.nextQuestion(correct)}, 1000);
                 }, 3000)
             }
         }
@@ -94,37 +95,45 @@ class Cube extends React.Component {
             {x: -1.5, y: 1.5, z: 2.02}, {x: 0, y: 1.5, z: 2.02}, {x: 1.5, y: 1.5, z: 2.02},
             {x: -1.5, y: 0, z: 2.02}, {x: 1.5, y: 0, z: 2.02},
             {x: -1.5, y: -1.5, z: 2.02}, {x: 0, y: -1.5, z: 2.02}, {x: 1.5, y: -1.5, z: 2.02},
-        ]
-        const {topic} = this.props
+        ];
+        const {
+            iteration,
+            quizQuestions,
+            questionsAsked,
+            correctAnswers,
+            currentQuestion,
+            rand
+        } = this.state;        
+        const { topic } = this.props;
 
         // const question = {term: 'hello'}
-        const question = this.state.quizQuestions[this.state.currentQuestion]
-        let questionIndex = 0
+        const question = quizQuestions[currentQuestion];
+        let questionIndex = 0;
 
-        this.props.topic.terms.forEach((ele, index) => {
-            if (ele.definition === question.definition) questionIndex = index
+        topic.terms.forEach((ele, index) => {
+            if (ele.definition === question.definition) questionIndex = index;
         })
 
-        let wrongAnswerOne = (questionIndex + 1) % this.props.topic.terms.length
-        let wrongAnswerTwo = (questionIndex - 1 + this.props.topic.terms.length) % this.props.topic.terms.length
+        let wrongAnswerOne = (questionIndex + 1) % topic.terms.length;
+        let wrongAnswerTwo = (questionIndex - 1 + topic.terms.length) % topic.terms.length;
 
         
-        // const answers = [question, this.props.topic.terms[wrongAnswerOne], this.props.topic.terms[wrongAnswerTwo]]
-        const answers = [question]
-        let correctArr
+        // const answers = [question, topic.terms[wrongAnswerOne], topic.terms[wrongAnswerTwo]]
+        const answers = [question];
+        let correctArr;
         
-        if (this.state.rand < (1/3)) {
-            answers.push(this.props.topic.terms[wrongAnswerOne])
-            answers.push(this.props.topic.terms[wrongAnswerTwo])
-            correctArr = [true, false, false]
-        } else if (this.state.rand < (2/3)) {
-            answers.push(this.props.topic.terms[wrongAnswerOne])
-            answers.unshift(this.props.topic.terms[wrongAnswerTwo])
-            correctArr = [false, true, false]
+        if (rand < (1/3)) {
+            answers.push(topic.terms[wrongAnswerOne]);
+            answers.push(topic.terms[wrongAnswerTwo]);
+            correctArr = [true, false, false];
+        } else if (rand < (2/3)) {
+            answers.push(topic.terms[wrongAnswerOne]);
+            answers.unshift(topic.terms[wrongAnswerTwo]);
+            correctArr = [false, true, false];
         } else {
-            answers.unshift(this.props.topic.terms[wrongAnswerOne])
-            answers.unshift(this.props.topic.terms[wrongAnswerTwo])
-            correctArr = [false, false, true]
+            answers.unshift(topic.terms[wrongAnswerOne]);
+            answers.unshift(topic.terms[wrongAnswerTwo]);
+            correctArr = [false, false, true];
         }
 
         // document.addEventListener('keydown', function(event) {
@@ -136,16 +145,16 @@ class Cube extends React.Component {
         return (
             <Scene>
                 <a-assets>
-                    <img id="logo" src="flashcubelogo.png"/>
-                    <img id="metal" src="metal.jpg"/>
-                    <img id="rawbeef" src="rawbeef.jpg"/>
-                    <img id="cardboard" src="cardboard.jpg"/>
-                    <img id="cubecursor" src="cubecursor.png"/>
-                    <img id="sean" src="sean.jpeg"/>
-                    <img id="romy" src="romy.jpeg"/>
-                    <img id="nath" src="nath.jpeg"/>
-                    <img id="dan" src="dan.jpg"/>
-                    <img id="paper" src="paper.jpg"/>
+                    <img alt="FlashCube logo" id="logo" src="flashcubelogo.png"/>
+                    <img alt="metal" id="metal" src="metal.jpg"/>
+                    <img alt="raw beef" id="rawbeef" src="rawbeef.jpg"/>
+                    <img alt="cardboard" id="cardboard" src="cardboard.jpg"/>
+                    <img alt="cube cursor" id="cubecursor" src="cubecursor.png"/>
+                    <img alt="Sean" id="sean" src="sean.jpeg"/>
+                    <img alt="Romy" id="romy" src="romy.jpeg"/>
+                    <img alt="Nathan" id="nath" src="nath.jpeg"/>
+                    <img alt="Dan" id="dan" src="dan.jpg"/>
+                    <img alt="Paper" id="paper" src="paper.jpg"/>
                 </a-assets>
                 <a-entity camera look-controls>
                     <Entity cursor="fuse: true; fuseTimeout: 1"
@@ -192,8 +201,9 @@ class Cube extends React.Component {
                         text={{value: 'Revision', align: 'center', color: 'black', baseline: 'bottom', wrapCount: '40', font: 'https://cdn.aframe.io/fonts/Exo2Bold.fnt'}}                        
                         >
                     </Entity>
+                    {/*expected return error here*/}
                     {posArr.map((pos, index) => {
-                        if (topic.terms[index + this.state.iteration * 8]) return <FlashCard updateCurrentCard={this.updateCurrentCard} term={topic.terms[index + this.state.iteration * 8].term} definition={topic.terms[index + this.state.iteration * 8].definition} img={topic.terms[index + this.state.iteration * 8].img} pos={pos}/>
+                        if (topic.terms[index + iteration * 8]) return <FlashCard updateCurrentCard={this.updateCurrentCard} term={topic.terms[index + iteration * 8].term} definition={topic.terms[index + iteration * 8].definition} img={topic.terms[index + iteration * 8].img} pos={pos}/>
                     })}
                     <RefreshCard updateCurrentCard={this.updateCurrentCard} refreshCards={this.refreshCards} pos={{x: 0, y: 0, z: 2.02}}/>
                 </Entity>
@@ -220,7 +230,7 @@ class Cube extends React.Component {
                         geometry={{primitive: 'plane', width: 5.8, height: 0.5}}
                         material={{src: '#cardboard'}}
                         position={{x: 0, y: -2.65, z: 2.02}}
-                        text={{value: `Quiz - ${this.state.correctAnswers} / ${this.state.questionsAsked} Correct Answers`, align: 'center', color: 'black', baseline: 'bottom', wrapCount: '40', font: 'https://cdn.aframe.io/fonts/Exo2Bold.fnt'}}                        
+                        text={{value: `Quiz - ${correctAnswers} / ${questionsAsked} Correct Answers`, align: 'center', color: 'black', baseline: 'bottom', wrapCount: '40', font: 'https://cdn.aframe.io/fonts/Exo2Bold.fnt'}}                        
                         >
                     </Entity>
                     {posArr.slice(5).map((pos, index) => {

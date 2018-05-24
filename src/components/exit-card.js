@@ -16,13 +16,13 @@ function FlashCard ({pos, img, exitCube, updateCurrentCard}) {
         e.target.emit('zoomOut')
     }
 
-    let cardFlipped = false;
+    // let cardFlipped = false;
 
-    function mouseClick (e) {
-        console.log('mouse click', e.detail.intersection)
-        cardFlipped ? e.target.emit('flipBack') : e.target.emit('flipOver')
-        cardFlipped = !cardFlipped
-    }
+    // function mouseClick (e) {
+    //     console.log('mouse click', e.detail.intersection)
+    //     cardFlipped ? e.target.emit('flipBack') : e.target.emit('flipOver')
+    //     cardFlipped = !cardFlipped
+    // }
 
     return (
         <Entity

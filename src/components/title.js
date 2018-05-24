@@ -1,16 +1,11 @@
 import React from 'react';
-import PT from 'prop-types';
 
-function Title (props) {
+function Title (props) { //we do not use this, so can delete?
     return (
         <div className="Title">
             Title
         </div>
     );
-}
-
-Title.propTypes = {
-    
 }
 
 export default Title;

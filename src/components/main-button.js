@@ -1,16 +1,11 @@
 import React from 'react';
-import PT from 'prop-types';
 
-function MainButton (props) {
+function MainButton (props) { // we do not use this so we can delete?
     return (
         <div className="MainButton">
             MainButton
         </div>
     );
-}
-
-MainButton.propTypes = {
-    
 }
 
 export default MainButton;

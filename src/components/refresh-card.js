@@ -16,7 +16,7 @@ function FlashCard ({pos, img, exitCube, refreshCards, updateCurrentCard}) {
         e.target.emit('zoomOut')
     }
 
-    let cardFlipped = false;
+    // let cardFlipped = false;
 
     return (
         <Entity
