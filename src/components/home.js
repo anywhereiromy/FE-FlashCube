@@ -8,7 +8,7 @@ import Loading from './loading';
 // import * as API from './API';
 import logoText from '../images/flash-text.png';
 import TopicCard from './topic-card';
-
+import PT from "prop-types";
 
 class Home extends Component {
 
@@ -18,20 +18,19 @@ class Home extends Component {
 
     logout = () => {
         fire.auth().signOut();
-        this.props.history.push('/')
+        this.props.history.push('/');
     }
 
     cubeStart = () => {
-        this.props.history.push('/cube')
+        this.props.history.push('/cube');
     }
 
-
-
     render() {
+        const { user, topics, handleClick, currentTopic, dbUser } = this.props;
+        console.log(topics);
         return (
-
             <div className="container">
-                {!this.props.user
+                {!user
                     ? <Loading />
                     : <div>
                         {/* <Title />
@@ -39,42 +38,39 @@ class Home extends Component {
                             <Link to="/cube">Enter the FlashCube</Link>
                             <MainButton />
                             <MainButton />
-                            <p>Welcome {this.props.user.displayName || "User"}</p>
+                            <p>Welcome {user.displayName || "User"}</p>
                             <MainButton />
                             <MainButton />
-                            <p>{this.props.user.uid}</p>
-                            <p>{JSON.stringify(this.props.dbUser)}</p>
-                            <p>{JSON.stringify(this.props.topics)}</p>
+                            <p>{user.uid}</p>
+                            <p>{JSON.stringify(dbUser)}</p>
+                            <p>{JSON.stringify(topics)}</p>
                             
                         </div>
                         <div className="profile-pic">
                         
-                            <img alt="" src={this.props.user.photoURL} />
+                            <img alt="" src={user.photoURL} />
                         </div>
                         <button onClick={this.logout}>Logout</button> */}
 
                         <img alt="" className="logo-image" src={logoText} />
                         <div className="profile-pic">
-                            <img alt="" src={this.props.user.photoURL} />
+                            <img alt="" src={user.photoURL} />
                         </div>
-                        <p>Welcome {this.props.user.displayName || "User"}</p>
+                        <p>Welcome {user.displayName || "User"}</p>
 
                         <button onClick={this.logout}>Logout</button>
 
                         <div className="container button-bar">
-                            <div onClick={this.cubeStart} class="waves-effect waves-light btn-large">  Start  </div>
-                            <a class="waves-effect waves-light btn-large"><i class="large material-icons">settings</i></a>
-                            <div class="waves-effect waves-light btn-large">Trophies</div>
+                            <div onClick={this.cubeStart} className="waves-effect waves-light btn-large">  Start  </div>
+                            <a className="waves-effect waves-light btn-large"><i className="large material-icons">settings</i></a>
+                            <div className="waves-effect waves-light btn-large">Trophies</div>
 
                         </div>
 
                         <div className="filters">
 
-
-                            <a class="waves-effect waves-light btn">Filter</a>
-                            <a class="waves-effect waves-light btn">Sort</a>
-
-
+                            <a className="waves-effect waves-light btn">Filter</a>
+                            <a className="waves-effect waves-light btn">Sort</a>
 
                         </div>
                         <div className="scroll-box">
@@ -82,25 +78,25 @@ class Home extends Component {
 
                             <div className="topic-list">
 
-                                <ul class="collection">
+                                <ul className="collection">
 
-                                    {this.props.topics.map((topic, index) => <TopicCard handleClick={this.props.handleClick} topic={topic} index={index} currentTopic={this.props.currentTopic} favourite={false} userId={this.props.dbUser.uid} />)}
-
+                                    {topics.map((topic, index) => <TopicCard handleClick={handleClick} topic={topic} index={index} currentTopic={currentTopic} userId={dbUser.uid} />)}
 
                                 </ul>
-
                             </div>
-
                         </div>
-
-
-
                     </div>}
-
-
             </div>
         )
     }
+}
+
+Home.propTypes = {
+    user: PT.object.isRequired,
+    topics: PT.array.isRequired,
+    handleClick: PT.func.isRequired,
+    currentTopic: PT.string.isRequired,
+    dbUser: PT.object.isRequired
 }
 
 export default Home;

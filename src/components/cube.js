@@ -56,11 +56,11 @@ class Cube extends React.Component {
     }
 
     pressSpace = e => {
-        console.log(e.keyCode);
+        console.log("cube", e.keyCode);
         if (e.keyCode === 32) {
-            console.log(this.state.currentCard.className);
-            console.log(this.state.currentCard.id);
-            console.log(this.state.currentCard.getAttribute('rotation'));
+            console.log("cube", this.state.currentCard.className);
+            console.log("cube", this.state.currentCard.id);
+            console.log("cube", this.state.currentCard.getAttribute('rotation'));
             if (this.state.currentCard.className === 'refreshCard') {
                 this.state.currentCard.emit('spin');
                 this.refreshCards();

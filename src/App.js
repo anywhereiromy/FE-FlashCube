@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import "./App.css";
-import { Route } from "react-router-dom"
+import { Route } from "react-router-dom";
 import Login from "./components/login";
-import { fire } from "./config/Fire";
+import { fire, facebookProvider } from "./config/Fire";
 import Home from "./components/home";
 import Cube from "./components/cube";
 import * as API from "./components/API";
-
+import { Redirect } from "react-router-dom";
 
 class App extends Component {
 
@@ -19,40 +19,60 @@ class App extends Component {
 
   }
 
-  componentDidMount() {
-    this.authListener();
-    // this.logout()
-  }
-
-  //this shouldn't be running for creating a new user...?
-  authListener() {
-    fire.auth().onAuthStateChanged(user => {
-      console.log(user);
-      if (user) {
-        this.setState({ user }, () => {
-          API.getUserById(user.uid)
-            .then(res => {
-              if (res.length === 0) {
-                return; //do we need to create DB user here?
-              } else {
-                console.log(res);
-                this.setState({ dbUser: res[0]._fields[0].properties }, () => {
-                  this.downloadTopicsOnLoad(res);
-                })
-              }
+  componentDidMount () {
+    if(this.state.user.uid) {
+      this.setState({ user: this.state.user }, () => {
+        API.getUserById(this.state.user.uid)
+          .then(res => {
+            this.setState({ dbUser: res[0]._fields[0].properties }, () => {
+              this.downloadTopicsOnLoad(res)
             })
-        });
-        //localStorage.setItem("user", user.uid);
-      } else {
-        this.setState({ user: null });
-        //localStorage.removeItem("user")
-      }
-    })
+          })
+      });
+    }
   }
 
   logout = () => {
     fire.auth().signOut();
   }
+
+  login = (e, email, password, history) => {       
+    e.preventDefault();
+    fire.auth().signInWithEmailAndPassword(email, password)
+      .then((u) => {
+        if(u.uid) {
+          this.setState({
+              user: API.getUserById(u.uid)
+          }, () => {
+              return <Redirect to={`/home`} />
+          })
+        } else {
+          console.log("user does not exist");
+        }
+      })
+      .catch((error) => {
+          console.log("Login function error", error);
+      })
+  }
+
+  signup = (e, email, password, confirmPassword, name, history) => { // hardcoded the photoURL for now
+        e.preventDefault();
+        fire.auth().createUserWithEmailAndPassword(email, password)
+            .then((u) => {
+              console.log(u);
+                API.createUserinNeo4jWithFirebaseID(u.user.uid, name).then(user => { // hardcoded the photoURL for now
+                    console.log("signup function response", user, typeof user);
+                    if(user.name) { 
+                      this.setState({
+                        dbUser: user
+                      }, () => {return <Redirect to={`/home`} />})
+                    } else console.log("error");
+                })
+            })
+            .catch((error) => {
+                console.log("Signup function error", error)
+            })
+    }
 
   downloadTopicsOnLoad = (res) => {
     const relatedTopics = res.map((ele) => {
@@ -93,10 +113,6 @@ class App extends Component {
       })
   }
 
-  updateDbUser = (dbUser) => {
-    this.setState({ dbUser });
-  }
-
   handleClick = (e) => {
     e.preventDefault();
     // this.setState({
@@ -111,14 +127,30 @@ class App extends Component {
 
   }
 
+  authWithFacebook = () => {
+    fire.auth().signInWithPopup(facebookProvider)
+        .then((result, error) => {
+          console.log("---->", result);
+            if (error) {
+                console.log("AuthwithFacebook error", error)
+            } else {
+                this.setState({
+                    user: result
+                }, () => {
+                    this.props.history.push('/home')
+                })
+            }
+        })
+  }
+
   render() {
     const { user, dbUser, topics, currentTopic } = this.state;
     return (
       <div className="App">
         <div>
           <div className="App-intro">
-            <Route exact path="/" component={Login} />
-            <Route exact path="/home" component={(props) => <Home {...props} updateDbUser={this.updateDbUser} user={user} dbUser={dbUser} topics={topics} handleClick={this.handleClick} currentTopic={currentTopic} />} />
+            <Route exact path="/" component={(props) => <Login {...props} login={this.login} signup={this.signup} authWithFacebook={this.authWithFacebook} dbUser={dbUser}/>} />
+            <Route exact path="/home" component={(props) => <Home {...props} user={user} dbUser={dbUser} topics={topics} handleClick={this.handleClick} currentTopic={currentTopic} />} />
             <Route exact path="/cube" component={(props) => <Cube {...props} user={user} dbUser={dbUser} topic={topics[currentTopic]} />} />
           </div>
         </div>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import '../home.css'
-import * as API from './API'
-
+import '../home.css';
+import * as API from './API';
+import PT from "prop-types";
 
 class TopicCard extends Component {
 
@@ -11,18 +11,14 @@ class TopicCard extends Component {
 
     }
 
-    userId = this.props.userId;
     topicTitle = this.props.topic.title.replace(/ /g, "%20")
 
     componentDidMount() {
-
         if (this.props.topic.relationship.includes('favourite')) {
             this.setState({
-
                 favourite: true
             })
         }
-
     }
 
     // addFavourite = () => {
@@ -39,52 +35,42 @@ class TopicCard extends Component {
     //         .catch(console.log)
     // }
 
-
-
     handleFave = () => {
-        API.createFavourite(this.userId, this.topicTitle)
+        API.createFavourite(this.props.userId, this.topicTitle);
         this.setState({
             favourite: true
         })
     }
 
     removeFave = () => {
-        console.log('remove')
-        API.removeFavourite(this.userId, this.topicTitle)
+        console.log('remove');
+        API.removeFavourite(this.props.userId, this.topicTitle)
         this.setState({
             favourite: false
         })
     }
 
-
-
-
     render() {
-
-
-
+        const { index, handleClick, topic } = this.props;
+        const { favourite } = this.state;
         return (
             <div className="topic-card">
-                <button value={this.props.index} onClick={this.props.handleClick} class="collection-item avatar topic-button">
+                <button value={index} onClick={handleClick} class="collection-item avatar topic-button">
 
-                    <img src={this.props.topic.imageUrl} alt="" class="circle" />
+                    <img src={topic.imageUrl} alt="" class="circle" />
 
-                    <p id={`${this.props.index}`}>{this.props.topic.title}<br />
-                        Number of terms: {this.props.topic.terms.length}
+                    <p id={`${index}`}>{topic.title}<br />
+                        Number of terms: {topic.terms.length}
                     </p>
 
+                    {/* {favourite ? <button onClick={this.favouriteClick} href="#!" class="secondary-content"><i class="material-icons">star</i></button> : <button onClick={this.favouriteClick} href="#!" class="secondary-content"><i class="material-icons">star_border</i></button>} */}
 
-
-
-                    {/* {this.state.favourite ? <button onClick={this.favouriteClick} href="#!" class="secondary-content"><i class="material-icons">star</i></button> : <button onClick={this.favouriteClick} href="#!" class="secondary-content"><i class="material-icons">star_border</i></button>} */}
-
-                    {/* {this.props.favourite && <a href="#!" class="secondary-content"><i class="material-icons">star</i></a>} */}
+                    {/* {favourite && <a href="#!" class="secondary-content"><i class="material-icons">star</i></a>} */}
                     {/* <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a> */}
-
 
                 </button>
                 <div id="favvy" className="fav-button">
-                    {this.state.favourite ? <button onClick={this.removeFave} href="#!" className="secondary-content fave-star"><i class="material-icons">star</i></button> : <button onClick={this.handleFave} href="#!" class="secondary-content"><i class="material-icons">star_border</i></button>}
+                    {favourite ? <button onClick={this.removeFave} href="#!" className="secondary-content fave-star"><i class="material-icons">star</i></button> : <button onClick={this.handleFave} href="#!" class="secondary-content"><i class="material-icons">star_border</i></button>}
                 </div>
             </div>
 
@@ -92,6 +78,11 @@ class TopicCard extends Component {
     }
 }
 
-
+TopicCard.propTypes = {
+    userId: PT.string.isRequired,
+    index: PT.number.isRequired,
+    handleClick: PT.func.isRequired,
+    topic: PT.object.isRequired
+}
 
 export default TopicCard;
